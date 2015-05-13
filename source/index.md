@@ -18,11 +18,10 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Mamazon API. You can use our API to access Mamazon API endpoints, which can get information on the different products and breeds in our database.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+We have a language binding in Shell, which gives an example of how to access the various endpoints.
 
-This example API documentation page was created with [Slate](http://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
 
 # Authentication
 
@@ -58,9 +57,9 @@ Kittn expects for the API key to be included in all API requests to the server i
 You must replace <code>meowmeowmeow</code> with your personal API key.
 </aside>
 
-# Kittens
+# Products
 
-## Get All Kittens
+## Get All Products
 
 ```ruby
 require 'kittn'
@@ -77,49 +76,65 @@ api.kittens.get()
 ```
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+curl "http://localhost:3000/api/products"
+  -H "Accept: application/vnd.list.com+json; version=1"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Isis",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+
+    "products": 
+
+    [
+
+        {
+
+            "id": 1,
+            "name": "Xbox one",
+            "description": "Microsoft's successor to the Xbox 360",
+            "price": 499.99,
+            "image_url": "http://compass.xbox.com/assets/94/60/946002c9-dfc7-44fe-b20a-abf175c49d42.jpg?n=og-share-meet-xbox-one-955x955.jpg",
+            "available": 5
+
+        },
+        {
+
+            "id": 2,
+            "name": "PlayStation 4",
+            "description": "Sony's gaming console",
+            "price": 599.99,
+            "image_url": "http://cdn.latam.playstation.com/latamucm/groups/public/documents/webasset/ps4-hrdware-large6_mx.jpg",
+            "available": 3
+
+        },
+
+        {
+            "id": 3,
+            "name": "Wii U",
+            "description": "Nintendo's new home console following the success of the Wii",
+            "price": 299.99,
+            "image_url": "http://cdn02.nintendo-europe.com/media/images/03_teaser_module_1_square/systems_2/wiiu_3/TM_GenericWiiU.png",
+            "available": 8
+        }
+    ]
+
+}
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all products.
 
 ### HTTP Request
 
-`GET http://example.com/kittens`
+`GET http://localhost:3000/api/products`
 
-### Query Parameters
+### URL Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+There are no parameters for this request.
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
 
-## Get a Specific Kitten
+## Get a Specific Product
 
 ```ruby
 require 'kittn'
@@ -136,33 +151,39 @@ api.kittens.get(2)
 ```
 
 ```shell
-curl "http://example.com/api/kittens/3"
-  -H "Authorization: meowmeowmeow"
+curl "http://localhost:3000/api/products/1"
+  -H "Accept: application/vnd.list.com+json; version=1"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Isis",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+
+    "product": 
+
+    {
+        "id": 1,
+        "name": "Xbox one",
+        "description": "Microsoft's successor to the Xbox 360",
+        "price": 499.99,
+        "image_url": "http://compass.xbox.com/assets/94/60/946002c9-dfc7-44fe-b20a-abf175c49d42.jpg?n=og-share-meet-xbox-one-955x955.jpg",
+        "available": 5
+    }
+
 }
 ```
 
-This endpoint retrieves a specific kitten.
+This endpoint retrieves a specific product.
 
-<aside class="warning">If you're not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside>
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`GET http://localhost:3000/api/products/<ID>`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the cat to retrieve
+ID | The ID of the product to retrieve
 
