@@ -3,11 +3,8 @@ title: API Reference
 
 language_tabs:
   - shell
-  - ruby
-  - python
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -25,59 +22,80 @@ We have a language binding in Shell, which gives an example of how to access the
 
 # Authentication
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+## Create session
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+# With shell, you need to access the sign in endpoint sending the email and password as parameters to receive a json strcture user with the auth_token attribute
+curl "localhost:3000/api/sign_in"
 ```
+> The above command returns JSON structured like this:
 
-> Make sure to replace `meowmeowmeow` with your API key.
+```json
+{
+    "id":2,
+    "email":"andres@andres.com",
+    "budget":null,
+    "created_at":"2015-05-14T22:00:03.507Z",
+    "updated_at":"2015-05-15T03:52:08.729Z",
+    "auth_token":"-zMbsrU8BcFxzC8zcpUb"
+}
+```
+This endpoint creates a new session that returns an authentication token that you can use to access the different endpoints of the API.
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+### HTTP Request
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+`POST http://localhost:3000/api/sign_in`
 
-`Authorization: meowmeowmeow`
+### Parameters
+
+Parameter | Description
+--------- | -----------
+email | The email of an existing user
+password | The password of an existing user
+
+Mamazon uses API tokens to allow access to the API. To use the Mamazon API you first need to create a session and then use the token received to access the endpoints.
+
+Mamazon expects for the API token and the Accept header to be included in all API requests to the server in headers that look like the following:
+
+`Accept: application/vnd.list.com+json; version=1`
+
+`Authorization: Token token=auth_token`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>auth_token</code> with the token you receive after creating a session.
 </aside>
+
+## Destroy session
+
+```shell
+# With shell, you need to access the sign out endpoint passing the auth_token as a header
+curl "localhost:3000/api/sign_in"
+  -H "Accept: application/vnd.list.com+json; version=1"
+  -H "Authorization: Token token=auth_token"
+```
+
+> The above command returns a 204 status which means the session ended.
+
+This endpoint destroys the current session, and requiring the user to sign in again to receive a new token.
+
+### HTTP Request
+
+`DELETE http://localhost:3000/api/sign_out`
+
+### Parameters
+
+This request requires no parameters.
+
 
 # Products
 
 ## Get All Products
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
 
 ```shell
 curl "http://localhost:3000/api/products"
   -H "Accept: application/vnd.list.com+json; version=1"
+  -H "Authorization: Token token=auth_token"
 ```
 
 > The above command returns JSON structured like this:
@@ -136,23 +154,11 @@ There are no parameters for this request.
 
 ## Get a Specific Product
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
 
 ```shell
 curl "http://localhost:3000/api/products/1"
   -H "Accept: application/vnd.list.com+json; version=1"
+  -H "Authorization: Token token=auth_token"
 ```
 
 > The above command returns JSON structured like this:
@@ -187,3 +193,48 @@ Parameter | Description
 --------- | -----------
 ID | The ID of the product to retrieve
 
+
+## Update a product
+
+
+```shell
+curl "http://localhost:3000/api/products/1"
+  -H "Accept: application/vnd.list.com+json; version=1"
+  -H "Authorization: Token token=auth_token"
+```
+
+> The above command returns JSON like this:
+
+```json
+{
+
+    "product": 
+
+    {
+        "id": 1,
+        "name": "Xbox one",
+        "description": "Microsoft's successor to the Xbox 360",
+        "price": 499.99,
+        "image_url": "http://compass.xbox.com/assets/94/60/946002c9-dfc7-44fe-b20a-abf175c49d42.jpg?n=og-share-meet-xbox-one-955x955.jpg",
+        "available": 5
+    }
+
+}
+```
+
+This endpoint updates the attributes of a certain product.
+
+
+### HTTP Request
+
+`PATCH http://localhost:3000/api/products/<ID>`
+
+### Parameters
+
+Parameter | Description
+--------- | -----------
+name | The name of the product
+description | The description of a product
+price | The price of a product
+image_url | The link to an image
+available | The number of available productss
